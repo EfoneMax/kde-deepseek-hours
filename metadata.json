@@ -1,0 +1,24 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "efonemax@gmail.com",
+                "Name": "EfoneMax"
+            }
+        ],
+        "Category": "Date and Time",
+        "Description": "Clock widget showing DeepSeek API peak/off-peak pricing",
+        "Icon": "chronometer",
+        "Id": "io.github.efonemax.deepseekhours",
+        "License": "GPL-3.0-or-later",
+        "Name": "DeepSeek Hours Clock",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "1.0",
+        "Website": "https://github.com/EfoneMax/kde-deepseek-hours"
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell",
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml"
+}

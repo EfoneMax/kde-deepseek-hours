@@ -1,0 +1,53 @@
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name="" />
+  <group name="General">
+    <entry name="model" type="String">
+      <label>DeepSeek model</label>
+      <default>deepseek-flash</default>
+    </entry>
+    <entry name="peakHours" type="String">
+      <label>Peak hours (UTC), hour ranges with exclusive end</label>
+      <default>1-4,6-10</default>
+    </entry>
+    <entry name="weekdaysOnly" type="Bool">
+      <label>Peak hours apply Monday-Friday only</label>
+      <default>true</default>
+    </entry>
+    <entry name="textAlign" type="String">
+      <label>Text alignment (left/center/right)</label>
+      <default>left</default>
+    </entry>
+    <entry name="cacheHitPeak" type="String">
+      <label>Cache-hit input price, peak (USD per 1M tokens)</label>
+      <default>0.006</default>
+    </entry>
+    <entry name="cacheHitOffPeak" type="String">
+      <label>Cache-hit input price, off-peak (USD per 1M tokens)</label>
+      <default>0.003</default>
+    </entry>
+    <entry name="cacheMissPeak" type="String">
+      <label>Cache-miss input price, peak (USD per 1M tokens)</label>
+      <default>0.3</default>
+    </entry>
+    <entry name="cacheMissOffPeak" type="String">
+      <label>Cache-miss input price, off-peak (USD per 1M tokens)</label>
+      <default>0.15</default>
+    </entry>
+    <entry name="outputPeak" type="String">
+      <label>Output price, peak (USD per 1M tokens)</label>
+      <default>1.2</default>
+    </entry>
+    <entry name="outputOffPeak" type="String">
+      <label>Output price, off-peak (USD per 1M tokens)</label>
+      <default>0.6</default>
+    </entry>
+    <entry name="bgOpacity" type="Double">
+      <label>Background opacity (0-1)</label>
+      <default>0.8</default>
+      <min>0</min>
+      <max>1</max>
+    </entry>
+  </group>
+</kcfg>

@@ -1,0 +1,21 @@
+# QML / Qt
+*.qmlc
+*.jsc
+.qmlcache/
+
+# Build / packaging artifacts
+build/
+dist/
+*.plasmoid
+*.tar.gz
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
