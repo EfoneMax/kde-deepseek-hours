@@ -7,7 +7,7 @@
             }
         ],
         "Category": "Date and Time",
-        "Description": "Clock widget showing DeepSeek API peak/off-peak pricing",
+        "Description": "Clock showing DeepSeek API peak/off-peak pricing, countdown and Chinese holidays",
         "Icon": "chronometer",
         "Id": "io.github.efonemax.deepseekhours",
         "License": "GPL-3.0-or-later",

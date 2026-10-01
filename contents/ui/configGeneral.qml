@@ -9,6 +9,7 @@ ColumnLayout {
 
     property alias cfg_bgOpacity: opacitySlider.value
     property alias cfg_weekdaysOnly: weekdaysBox.checked
+    property alias cfg_respectHolidays: holidaysBox.checked
     property alias cfg_peakHours: hoursField.text
     property alias cfg_cacheHitPeak: hitPeakField.text
     property alias cfg_cacheHitOffPeak: hitOffField.text
@@ -93,6 +94,18 @@ ColumnLayout {
             text: "Peak hours Monday-Friday only (UTC)"
         }
 
+        QQC2.CheckBox {
+            id: holidaysBox
+            text: "Chinese public holidays are off-peak all day"
+        }
+
+        QQC2.Label {
+            Kirigami.FormData.label: ""
+            text: "Holiday dates are encoded for 2026–2032 (2026 official; later years estimated). Weekends, including make-up workdays, stay off-peak."
+            wrapMode: Text.WordWrap
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+        }
+
         QQC2.Label {
             Kirigami.FormData.label: ""
             text: "Prices in USD per 1M tokens:"
@@ -136,6 +149,7 @@ ColumnLayout {
                 cfg_model = "deepseek-flash";
                 cfg_peakHours = "1-4,6-10";
                 cfg_weekdaysOnly = true;
+                cfg_respectHolidays = true;
                 setPrices(flashPrices);
             }
         }

@@ -11,8 +11,10 @@ Item {
     property date now: new Date()
     property var ranges: Hours.parseRanges(plasmoid.configuration.peakHours)
     property bool weekdaysOnly: plasmoid.configuration.weekdaysOnly
-    property bool isPeak: Hours.isPeakAt(ranges, now, weekdaysOnly)
-    property var transition: Hours.nextTransition(ranges, now, weekdaysOnly)
+    property bool respectHolidays: plasmoid.configuration.respectHolidays
+    property bool isPeak: Hours.isPeakAt(ranges, now, weekdaysOnly, respectHolidays)
+    property var transition: Hours.nextTransition(ranges, now, weekdaysOnly, respectHolidays)
+    property string offpeakReason: Hours.offpeakReason(now, weekdaysOnly, respectHolidays)
 
     implicitWidth: 260
     implicitHeight: 150
@@ -68,7 +70,7 @@ Item {
         return dayPrefix + Qt.formatTime(d, "h:mm AP") + " " + tz;
     }
 
-    property string statusText: isPeak ? "PEAK · FULL PRICE" : "OFF-PEAK · HALF PRICE"
+    property string statusText: isPeak ? "PEAK · FULL PRICE" : ("OFF-PEAK · " + (offpeakReason !== null ? offpeakReason.toUpperCase() : "HALF PRICE"))
     property string nextText: transition.seconds < 0 ? "No upcoming change" : (isPeak ? "Off-peak" : "Peak") + " starts " + transitionLocalStr()
     property string countdownText: fmtClock(transition.seconds)
 
@@ -84,7 +86,7 @@ Item {
             "cache-hit  in: peak $" + pt(cfg.cacheHitPeak) + " / off-peak $" + pt(cfg.cacheHitOffPeak) + "\n" +
             "cache-miss in: peak $" + pt(cfg.cacheMissPeak) + " / off-peak $" + pt(cfg.cacheMissOffPeak) + "\n" +
             "output:        peak $" + pt(cfg.outputPeak) + " / off-peak $" + pt(cfg.outputOffPeak) + "\n" +
-            "peak hours (UTC" + (root.weekdaysOnly ? ", Mon-Fri" : "") + "): " + cfg.peakHours;
+            "peak hours (UTC" + (root.weekdaysOnly ? ", Mon-Fri" : "") + (root.respectHolidays ? ", excl. CN holidays" : "") + "): " + cfg.peakHours;
     }
 
     Rectangle {
