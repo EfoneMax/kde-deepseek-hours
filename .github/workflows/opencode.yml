@@ -34,14 +34,39 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Run OpenCode
-        uses: anomalyco/opencode/github@f4e363c8295fa90a03dddc451882fffe8fbce357 # v1.19.6
+      - name: Install OpenCode 1.19.6
         env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          OPENCODE_VERSION: "1.19.6"
+          OPENCODE_SHA256: "47734e08968b30cc22a0bffb6d9feeed76ad4aa743213a12122040392d09a057"
+        run: |
+          set -euo pipefail
+          if [ "$(uname -m)" != "x86_64" ]; then
+            echo "Unsupported architecture: $(uname -m)" >&2
+            exit 1
+          fi
+          archive="$(mktemp)"
+          trap 'rm -f "$archive"' EXIT
+          url="https://github.com/anomalyco/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-x64.tar.gz"
+          curl --proto '=https' --tlsv1.2 --retry 3 --retry-delay 2 -fsSL "$url" -o "$archive"
+          printf '%s  %s\n' "$OPENCODE_SHA256" "$archive" | sha256sum -c -
+          install_dir="$HOME/.opencode/bin"
+          mkdir -p "$install_dir"
+          tar -xzf "$archive" -C "$install_dir" opencode
+          chmod +x "$install_dir/opencode"
+          echo "$install_dir" >> "$GITHUB_PATH"
+          installed="$("$install_dir/opencode" --version)"
+          if [ "$installed" != "$OPENCODE_VERSION" ]; then
+            echo "Expected OpenCode $OPENCODE_VERSION, got $installed" >&2
+            exit 1
+          fi
+
+      - name: Run OpenCode
+        env:
+          MODEL: deepseek/deepseek-flash
+          USE_GITHUB_TOKEN: "true"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          model: deepseek/deepseek-flash
-          use_github_token: true
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: opencode github run
 
   fix:
     name: Fix with OpenCode
@@ -69,11 +94,36 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Run OpenCode
-        uses: anomalyco/opencode/github@f4e363c8295fa90a03dddc451882fffe8fbce357 # v1.19.6
+      - name: Install OpenCode 1.19.6
         env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          OPENCODE_VERSION: "1.19.6"
+          OPENCODE_SHA256: "47734e08968b30cc22a0bffb6d9feeed76ad4aa743213a12122040392d09a057"
+        run: |
+          set -euo pipefail
+          if [ "$(uname -m)" != "x86_64" ]; then
+            echo "Unsupported architecture: $(uname -m)" >&2
+            exit 1
+          fi
+          archive="$(mktemp)"
+          trap 'rm -f "$archive"' EXIT
+          url="https://github.com/anomalyco/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-x64.tar.gz"
+          curl --proto '=https' --tlsv1.2 --retry 3 --retry-delay 2 -fsSL "$url" -o "$archive"
+          printf '%s  %s\n' "$OPENCODE_SHA256" "$archive" | sha256sum -c -
+          install_dir="$HOME/.opencode/bin"
+          mkdir -p "$install_dir"
+          tar -xzf "$archive" -C "$install_dir" opencode
+          chmod +x "$install_dir/opencode"
+          echo "$install_dir" >> "$GITHUB_PATH"
+          installed="$("$install_dir/opencode" --version)"
+          if [ "$installed" != "$OPENCODE_VERSION" ]; then
+            echo "Expected OpenCode $OPENCODE_VERSION, got $installed" >&2
+            exit 1
+          fi
+
+      - name: Run OpenCode
+        env:
+          MODEL: deepseek/deepseek-flash
+          USE_GITHUB_TOKEN: "true"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          model: deepseek/deepseek-flash
-          use_github_token: true
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: opencode github run
