@@ -119,6 +119,17 @@ restart plasmashell:
 plasmashell --replace &
 ```
 
+## Checks
+
+GitHub Actions workflows are checked with jactionlint 2.6.0:
+
+```sh
+make check
+```
+
+The script downloads the pinned release, verifies its SHA256 checksum and
+runs it with the default profile. The same command runs in CI.
+
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).
