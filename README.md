@@ -57,7 +57,7 @@ kpackagetool5 --type Plasma/Applet --remove io.github.efonemax.deepseekhours
 
 The widget shows:
 
-- a colored dot and status line (`OFF-PEAK · HALF PRICE` / `PEAK · FULL PRICE`),
+- a colored dot and status line (`OFF-PEAK · HALF PRICE`, or `OFF-PEAK · WEEKEND` / `OFF-PEAK · SPRING FESTIVAL` when the discount is due to a weekend or a Chinese public holiday; `PEAK · FULL PRICE` during peak),
 - a large countdown (`H:MM:SS`) until the tariff changes,
 - a line telling you when the next period starts, in local time,
 - all current prices in a tooltip when you hover over the widget.
@@ -73,6 +73,7 @@ Right-click the widget → **Configure** → **General**:
 | **Text alignment** | Align the whole text block left, center or right. |
 | **Peak hours (UTC)** | Comma-separated UTC hour ranges with an **exclusive end**, e.g. `1-4,6-10` means 01:00–04:00 and 06:00–10:00. A single number is one hour; ranges may wrap past midnight (`22-3`). |
 | **Peak hours Monday-Friday only** | DeepSeek charges peak rates on weekdays only; weekends are fully off-peak. |
+| **Chinese public holidays are off-peak all day** | Chinese public holidays (Beijing calendar) are fully off-peak. Holiday dates are encoded for 2026–2032. Make-up workdays (调休) on weekends do **not** become peak — DeepSeek bills every weekend at the off-peak rate. |
 | **Prices** | Cache-hit input, cache-miss input and output, for peak and off-peak, in USD per 1M tokens. Used in the tooltip. |
 | **Reset to deepseek-flash defaults** | Restores the model, schedule and prices to the built-in defaults. |
 
@@ -80,9 +81,15 @@ Right-click the widget → **Configure** → **General**:
 
 The defaults in this widget follow DeepSeek's published pricing:
 
-- **Peak hours:** 01:00–04:00 and 06:00–10:00 UTC, **Monday–Friday**.
-- **Off-peak:** all other times, including the whole weekend.
+- **Peak hours:** 01:00–04:00 and 06:00–10:00 UTC, **Monday–Friday**, excluding Chinese public holidays.
+- **Off-peak:** all other times, including the whole weekend and all Chinese public holidays.
 - **Off-peak rates are half of peak rates.**
+
+Chinese public holidays follow the State Council calendar (Beijing time). The
+holiday dates are encoded for **2026–2032**; only 2026 is officially published,
+later years are estimated from the standing 放假 rules. Make-up workdays
+(调休) are ignored on purpose: DeepSeek bills every weekend as off-peak
+regardless of the office calendar.
 
 Default prices for `deepseek-flash` (USD per 1M tokens):
 
@@ -112,9 +119,26 @@ restart plasmashell:
 plasmashell --replace &
 ```
 
+## Checks
+
+GitHub Actions workflows are checked with jactionlint 2.6.0:
+
+```sh
+make check
+```
+
+The script downloads the pinned release, verifies its SHA256 checksum and
+runs it with the default profile. The same command runs in CI.
+
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).
+
+## Acknowledgments
+
+The Chinese public holiday schedule is based on the reference implementation
+[AutonomoAI/DSHours](https://github.com/AutonomoAI/DSHours) and the official
+DeepSeek pricing page.
 
 ## Disclaimer
 

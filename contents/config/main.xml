@@ -15,6 +15,10 @@
       <label>Peak hours apply Monday-Friday only</label>
       <default>true</default>
     </entry>
+    <entry name="respectHolidays" type="Bool">
+      <label>Chinese public holidays are fully off-peak</label>
+      <default>true</default>
+    </entry>
     <entry name="textAlign" type="String">
       <label>Text alignment (left/center/right)</label>
       <default>left</default>

@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jdx/jactionlint/main/schema/jactionlint-config.json
+ignores:
+  - rule: dangerous-triggers
+    file: .github/workflows/opencode.yml
+    reason: "issue_comment is required for /oc; the job is limited to OWNER/MEMBER/COLLABORATOR, checks out only the default branch and has write access only to issues"
+    expires: "2027-06-30"
