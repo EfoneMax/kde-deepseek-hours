@@ -11,12 +11,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  opencode:
-    name: Answer with OpenCode
+  explain:
+    name: Explain with OpenCode
     if: >-
       ${{
         contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
-        (contains(github.event.comment.body, '/oc') || contains(github.event.comment.body, '/opencode'))
+        (contains(github.event.comment.body, '/oc') || contains(github.event.comment.body, '/opencode')) &&
+        !contains(github.event.comment.body, '/oc fix') &&
+        !contains(github.event.comment.body, '/opencode fix')
       }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -31,6 +33,41 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 1
           persist-credentials: false
+
+      - name: Run OpenCode
+        uses: anomalyco/opencode/github@f4e363c8295fa90a03dddc451882fffe8fbce357 # v1.19.6
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          model: deepseek/deepseek-flash
+          use_github_token: true
+
+  fix:
+    name: Fix with OpenCode
+    if: >-
+      ${{
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+        (contains(github.event.comment.body, '/oc fix') || contains(github.event.comment.body, '/opencode fix'))
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write # push the agent branch
+      issues: write # post progress and the answer
+      pull-requests: write # open the pull request
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Configure git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@f4e363c8295fa90a03dddc451882fffe8fbce357 # v1.19.6
